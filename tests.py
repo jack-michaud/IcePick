@@ -1,9 +1,10 @@
-from django.test import TestCase
+import unittest
+import utils
 from IcePick import HTMLStructureElt, EmptyHTMLElt, IcePick
 from bs4 import BeautifulSoup
 import requests
 
-class HTMLStructureEltTestCase(TestCase):
+class HTMLStructureEltTestCase(unittest.TestCase):
     emptystructure = EmptyHTMLElt()
     structure1 = HTMLStructureElt("a", emptystructure, emptystructure)
     structure2 = HTMLStructureElt("div", emptystructure, emptystructure)
@@ -29,13 +30,13 @@ class HTMLStructureEltTestCase(TestCase):
 
 
 
-class IcePickTestCase(TestCase):
+class IcePickTestCase(unittest.TestCase):
     emptystructure = EmptyHTMLElt()
-    structure1 = HTMLStructureElt("a", emptystructure, emptystructure)
-    structure2 = HTMLStructureElt("div", emptystructure, emptystructure)
-    structure3 = HTMLStructureElt("div", structure2, emptystructure)
+    structure1 = HTMLStructureElt("a", emptystructure, emptystructure, label="name")
+    structure2 = HTMLStructureElt("div", emptystructure, emptystructure, label="date")
+    structure3 = HTMLStructureElt("div", structure2, emptystructure, label="text")
     structure4 = HTMLStructureElt("h3", structure3, structure1)
-    structure5 = HTMLStructureElt("div", emptystructure, structure4)
+    structure5 = HTMLStructureElt("div", emptystructure, structure4, label="container")
 
     def setUp(self):
         self.response = requests.get('https://mbasic.facebook.com/photo.php?fbid=873660689404554&id=100002818929893&')
@@ -90,4 +91,8 @@ class IcePickTestCase(TestCase):
     #     ice1 = IcePick(soup1, structure)
     #     ice1.find()
     #
-    #     self.assertTrue(ice1.find() is not [])    
+    #     self.assertTrue(ice1.find() is not [])
+
+
+if __name__ == '__main__':
+    unittest.main()

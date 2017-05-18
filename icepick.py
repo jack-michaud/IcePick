@@ -194,10 +194,10 @@ class HTMLStructureElt(HTMLStructure):
             child_soup = None
 
         try:
-            return self.name == soup.name and self.sibling.correct_soup_siblings(soup.next_sibling) and \
+            return self.name == soup.name and self.sibling.correct_soup_siblings(soup.findNextSibling()) and \
                    self.child.correct_soup(child_soup)
         except IndexError:
-            return self.name == soup.name and self.sibling.correct_soup_siblings(soup.next_sibling) and \
+            return self.name == soup.name and self.sibling.correct_soup_siblings(soup.findNextSibling()) and \
                    self.child.correct_soup(None)
 
     def dictify_content(self, soup, content={}):
@@ -219,7 +219,7 @@ class HTMLStructureElt(HTMLStructure):
             child_soup = None
 
         content = self.child.dictify_content(child_soup, content)
-        content = self.sibling.dictify_content(soup.next_sibling, content)
+        content = self.sibling.dictify_content(soup.findNextSibling(), content)
         return content
 
     def _get_label(self, label, soup):
@@ -235,7 +235,7 @@ class HTMLStructureElt(HTMLStructure):
 
         child = self.child._get_label(label, child_soup)
 
-        sibling = self.sibling._get_label(label, soup.next_sibling)
+        sibling = self.sibling._get_label(label, soup.findNextSibling())
 
         if child is not None:
             return child

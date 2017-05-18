@@ -24,11 +24,10 @@ def sculpt_structure(soup, label_attribute=None):
     except IndexError:
         child_soup = None
 
-    sibling_soup = temp_soup.next_sibling
+    sibling_soup = temp_soup.findNextSibling()
 
     return HTMLStructureElt(soup.name,
                             sculpt_structure(sibling_soup, label_attribute),
                             sculpt_structure(child_soup, label_attribute),
                             soup.get(label_attribute),
                             soup.get('placeholder') is not None)
-
