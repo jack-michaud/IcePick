@@ -1,53 +1,14 @@
 # IcePick
-A new way to scrape HTML - sort by structure instead of classes and IDs.
+IcePick offers a highly accurate method of scraping. It's a new way to scrape HTML - sorting by structure instead of classes and IDs.
+
+## What do I use IcePick for?
+
+I scrape social media data in my webapp [Harrow Search](https://harrowsearch.com). **IcePick is instrumental in scraping Facebook** because of the myriad of similarly structured data items that appear on the site. (The Facebook API does not offer what I need, no. IcePick helped me construct an ad hoc API!)
 
 ## Usage
 
-Let's scrape the homepage of the [Python 2.7 documentation](https://docs.python.org/2.7/).
+Check out the [IcePick documentation README](https://github.com/jack-michaud/IcePick/blob/master/docs/README.md) for an example of scraping the Python docs.
 
-I'm looking to scrape the "Parts of the documentation", so I look at the source.
-
-![docs](https://github.com/jack-michaud/IcePick/blob/master/docs/Python_2_7_13_documentation.png)
-
-The barebones of the heirarchy is all that we need. You will see this in the "faux_html" in the example...
-
-```python
-
-from utils import sculpt_structure
-from IcePick import IcePick
-
-from bs4 import BeautifulSoup
-import requests
-
-# Craft up the framework of the HTML you want to scrape.  
-# Note the label attribute. These will be used to reference elements with IcePick.dictify (used later).
-faux_html = """
-  <p>
-    <a label="title"></a>
-    <br/>
-  </p>
-"""
-
-# Make the HTML into a soup (no spaces, tabs, or newlines)
-faux_soup = BeautifulSoup(faux_html.replace('  ', '').replace('\n',''), 'html.parser')
-
-# Use the "sculpt_structure" utility to make a structure out of that faux soup.
-# Note: you CAN manually create the crazy recursive data structure, but I made the utility to make it easier.
-documentation_topics_structure = sculpt_structure(faux_soup, label_attribute='label')
-
-```
-The setup of IcePick is all done. Now to scrape:
-
-```python
-
-response = requests.get('https://docs.python.org/2.7/')
-soup = BeautifulSoup(response.text, 'html.parser')
-
-# Here comes IcePick!
-ice = IcePick(soup, documentation_topics_structure)
-# It's set up.
-
-```
 ### ice.find()
 Finds the soups of all HTML that match the structure. 
 
@@ -78,30 +39,4 @@ for ice_tag in ice.dictify():
     print ""
 
 ```
-
-
-#### IMPORTANT Note on the IcePick searching algorithm
-If the faux HTML constructed has no specific children or siblings in the HTML tree, IcePick will not check those children or siblings when given a soup to search. 
-That means, for example, if the faux HTML is:
-```html
-<div>
-  <p></p>
-</div>
-```
-...IcePick may retrieve both this:
-```html
-<div>
-  <p>
-    <span>Yo!</span>
-  </p>
-</div>
-```
-...and this:
-```html
-<div>
-  <p>Crank that!</p>
-  <p>Quietly :)</p>
-</div>
-```
-(If you have questions, please make an issue and I'll clarify and add it to the docs/readme)
 
