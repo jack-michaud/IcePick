@@ -11,8 +11,8 @@ The barebones of the heirarchy is all that we need. You will see this in the "fa
 
 ```python
 
-from utils import sculpt_structure
-from IcePick import IcePick
+from iPick.utils import sculpt_structure
+from iPick import IcePick
 
 from bs4 import BeautifulSoup
 import requests
